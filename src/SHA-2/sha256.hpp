@@ -23,10 +23,10 @@
         0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
       };
 
-      std::vector<std::string> m_chunks;
+      std::vector<uint32_t> m_chunks;
 
     protected:
-      static const uint32_t SHA256_BLOCK_SIZE = ( 512 / 8 );
+      static const uint32_t SHA256_BLOCK_BIT_SIZE = 512;
     
     public:
       SHA256(const std::string& message);
@@ -36,10 +36,12 @@
 
     private:
       
-      uint32_t                  to_uint32  (const std::string& chunk);
-      std::vector<std::string>  get_chunks (const std::string& msg);
+      std::string             padding_message(const std::string& msg    );
+      uint32_t                char_to_uint32 (const std::string& chunk  );
+      uint32_t                bits_to_uint32 (const std::string& chunk  );
+      std::vector<uint32_t>   get_chunks     (const std::string& binmsg );
 
-      void compute();
+      void                    compute();
       
       uint32_t Ch         (uint32_t x, uint32_t y, uint32_t z);
       uint32_t Maj        (uint32_t x, uint32_t y, uint32_t z);
