@@ -27,8 +27,10 @@
 
     protected:
       static const uint32_t SHA256_BLOCK_BIT_SIZE = 512;
+      static const uint32_t SHA256_CHUNK_BIT_SIZE =  32;
     
     public:
+      SHA256();
       SHA256(const std::string& message);
       
       std::string             hex();

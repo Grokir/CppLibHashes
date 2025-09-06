@@ -4,7 +4,8 @@
 #include <iomanip>
 #include <bitset>
 
-#include <iostream>
+
+SHA256::SHA256() = default;
 
 SHA256::SHA256(const std::string& message){
   this->m_chunks = this->get_chunks(
@@ -51,14 +52,12 @@ std::string SHA256::padding_message(const std::string& msg){
 };
 
 
-std::vector<uint32_t>  SHA256::get_chunks(const std::string& binmsg){
+std::vector<uint32_t> SHA256::get_chunks(const std::string& binmsg){
   std::vector<uint32_t>   res;
   std::string             chunk;
-  const uint8_t           chunk_ref_size  =  32; // cnt bits
-  // const uint8_t           chunk_ref_size  =  SHA256_BLOCK_BIT_SIZE; // cnt bits
-
+  
   for (int i = 0; i < binmsg.size(); i++){
-    if(chunk.size() == chunk_ref_size){
+    if(chunk.size() == SHA256_CHUNK_BIT_SIZE){
       res.push_back(bits_to_uint32(chunk));
       chunk.clear();
     }
@@ -100,7 +99,8 @@ uint32_t SHA256::Maj(uint32_t x, uint32_t y, uint32_t z){
 
 
 // because sizeof return num of bytes,
-// but need size in bits
+// but need size in bits, 
+// so we miltiple sizeof(x) on 8 (size of byte)
 uint32_t SHA256::rightrotate(uint32_t x, uint32_t n){
   return ( (x >> n) | (x << (sizeof(x) * 8 - n)) );
 };
@@ -129,13 +129,13 @@ uint32_t SHA256::D1 (uint32_t x){
 ////================================================================================
 
 void SHA256::compute(){
-  int N = this->m_chunks.size() / SHA256_BLOCK_BIT_SIZE;
+  uint32_t N = ( this->m_chunks.size() * SHA256_CHUNK_BIT_SIZE ) / SHA256_BLOCK_BIT_SIZE;
   uint32_t W[64];
   uint32_t a, b, c, d, e, f, g, h;
   uint32_t T1, T2;
 
 
-  for(int i = 1; i < N; i++){
+  for(int i = 0; i < N; i++){
 
     for(int t = 0; t < 64; t++){
       if(t < 16)
