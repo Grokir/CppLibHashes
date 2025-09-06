@@ -36,6 +36,9 @@
       std::string             hex();
       std::vector<uint32_t>   hexdigest();
 
+
+      void operator()(const std::string& message);
+
     private:
       
       std::string             padding_message(const std::string& msg    );
@@ -43,6 +46,7 @@
       uint32_t                bits_to_uint32 (const std::string& chunk  );
       std::vector<uint32_t>   get_chunks     (const std::string& binmsg );
 
+      void                    init   (const std::string& message);
       void                    compute();
       
       uint32_t Ch         (uint32_t x, uint32_t y, uint32_t z);

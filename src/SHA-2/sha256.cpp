@@ -8,11 +8,13 @@
 SHA256::SHA256() = default;
 
 SHA256::SHA256(const std::string& message){
-  this->m_chunks = this->get_chunks(
-    this->padding_message(message)
-  );
-  this->compute();
+  init(message);
 };
+
+void SHA256::operator()(const std::string& message){
+  init(message);
+};
+
 
 uint32_t SHA256::char_to_uint32 (const std::string& chunk){
   uint32_t res =  ( ((uint32_t) chunk[0]) << 24 ) & 0xFF000000 | 
@@ -127,6 +129,13 @@ uint32_t SHA256::D1 (uint32_t x){
 
 
 ////================================================================================
+
+void SHA256::init(const std::string& message){
+  this->m_chunks = this->get_chunks(
+    this->padding_message(message)
+  );
+  this->compute();
+};
 
 void SHA256::compute(){
   uint32_t N = ( this->m_chunks.size() * SHA256_CHUNK_BIT_SIZE ) / SHA256_BLOCK_BIT_SIZE;
