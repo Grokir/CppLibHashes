@@ -26,7 +26,7 @@ uint32_t SHA256::char_to_uint32 (const std::string& chunk){
 };
 
 uint32_t SHA256::bits_to_uint32 (const std::string& chunk){
-  return (uint32_t) std::bitset<32>(chunk).to_ulong();
+  return (uint32_t) std::bitset<SHA256_CHUNK_BIT_SIZE>(chunk).to_ulong();
 };
 
 std::string SHA256::padding_message(const std::string& msg){
