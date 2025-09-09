@@ -4,6 +4,7 @@
   #include <cstdint>
   #include <string>
   #include <vector>
+  #include <utility>
 
   class SHA512 {
     private:
@@ -52,18 +53,20 @@
       SHA512(const std::string& message);
       
       std::string             hex();
-      std::vector<uint64_t>   hexdigest();
+      std::vector<uint32_t>   hexdigest();
 
 
       void operator()(const std::string& message);
 
     private:
       
-      std::string             padding_message(const std::string& msg    );
-      uint64_t                char_to_uint64 (const std::string& chunk  );
-      uint64_t                bits_to_uint64 (const std::string& chunk  );
-      std::vector<uint64_t>   get_chunks     (const std::string& binmsg );
-
+      std::string                   padding_message ( const std::string& msg    );
+      uint64_t                      char_to_uint64  ( const std::string& chunk  );
+      uint64_t                      bits_to_uint64  ( const std::string& chunk  );
+      std::vector<uint64_t>         get_chunks      ( const std::string& binmsg );
+      
+      std::pair<uint32_t, uint32_t> uint64_to_uint32(       std::uint64_t val   );
+      
       void                    init   (const std::string& message);
       void                    compute();
       

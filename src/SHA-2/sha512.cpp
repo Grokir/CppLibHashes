@@ -33,6 +33,16 @@ uint64_t SHA512::bits_to_uint64 (const std::string& chunk){
   return (uint64_t) std::bitset<SHA512_CHUNK_BIT_SIZE>(chunk).to_ulong();
 };
 
+std::pair<uint32_t, uint32_t> SHA512::uint64_to_uint32(std::uint64_t val){
+  uint32_t first, second;
+
+  std::string tmp = std::bitset<64>(val).to_string();
+  first  = std::bitset<32>(tmp.substr(0, 32)).to_ulong();
+  second = std::bitset<32>(tmp.substr(32, 32)).to_ulong();
+
+  return std::pair<uint32_t, uint32_t>(first, second);
+};
+
 std::string SHA512::padding_message(const std::string& msg){
   std::string binstr, 
               tmp;
@@ -85,12 +95,18 @@ std::string SHA512::hex(){
 
   return ss.str();
 };
-std::vector<uint64_t> SHA512::hexdigest(){
-  int H_size = 8;
-  std::vector<uint64_t> res(H_size);
+std::vector<uint32_t> SHA512::hexdigest(){
+  int H_size = sizeof(m_H) / sizeof(m_H[0]);
+
+  std::pair<uint32_t, uint32_t> tmp;
+  std::vector<uint32_t>         res;
   
-  for(int i = 0; i < H_size; i++)
-    res[i] = m_H[i];
+  int j = 0;
+  for(int i = 0; i < H_size; i++){
+    tmp = uint64_to_uint32(m_H[i]);
+    res.push_back(tmp.first);
+    res.push_back(tmp.second);
+  }
 
   return res;
 };
