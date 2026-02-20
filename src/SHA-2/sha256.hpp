@@ -34,7 +34,7 @@
       SHA256(const std::string& message);
       
       std::string             hex();
-      std::vector<uint32_t>   hexdigest();
+      std::vector<uint8_t>   hexdigest();
 
 
       void operator()(const std::string& message);

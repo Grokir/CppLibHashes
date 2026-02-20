@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iomanip>
 #include <bitset>
+#include <cstring> // for memcpy
 
 
 SHA256::SHA256() = default;
@@ -81,12 +82,20 @@ std::string SHA256::hex(){
 
   return ss.str();
 };
-std::vector<uint32_t> SHA256::hexdigest(){
-  int H_size = 8;
-  std::vector<uint32_t> res(H_size);
-  
-  for(int i = 0; i < H_size; i++)
-    res[i] = m_H[i];
+std::vector<uint8_t> SHA256::hexdigest(){
+  const int H_size = 8;
+  std::vector<uint8_t> res(32);
+  uint8_t byteArray[sizeof(m_H[0])];
+
+  // Copy the bytes from the uint32_t to the uint8_t array
+  uint k = 0;
+  for(int i = 0; i < H_size; i++){
+    std::memcpy(byteArray, &m_H[i], sizeof(m_H[i]));
+    for(int j = 0; j < sizeof(m_H[i]); j++){
+      res[k] = byteArray[j];
+      ++k;
+    }
+  }
 
   return res;
 };
